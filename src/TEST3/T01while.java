@@ -1,4 +1,4 @@
-package TSET3;
+package TEST3;
 
 import java.util.Scanner;
 
