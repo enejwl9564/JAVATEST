@@ -1,6 +1,6 @@
 package TEST5;
 
-class C06Computer{
+class T06Computer{
 	String SerialNo, CPUSpec, RAMSpec, DISKSpec;
 	
 	void PowerON() {
@@ -14,11 +14,11 @@ class C06Computer{
 	}
 }
 
-public class C06ComputerMain {
+public class T06ComputerMain {
 
 	public static void main(String[] args) {
 		
-		C06Computer LGGram1010 = new C06Computer();
+		T06Computer LGGram1010 = new T06Computer();
 		LGGram1010.SerialNo = "1010";
 		LGGram1010.CPUSpec = "I7";
 		LGGram1010.RAMSpec = "16G";
