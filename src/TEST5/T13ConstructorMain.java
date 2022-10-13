@@ -49,6 +49,8 @@ public class T13ConstructorMain { // 생성 하다
 		System.out.println(obj.toString());
 		T13Simple obj2 = new T13Simple(101);	//int받는 생성자
 		System.out.println(obj2.toString());
+		T13Simple obj3 = new T13Simple(10,12.34);	//int, double받는 생성자
+		System.out.println(obj3.toString());
 	}
 
 }
