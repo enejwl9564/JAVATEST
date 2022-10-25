@@ -3,7 +3,8 @@ package TEST17EXEC;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import org.mindrot.jbcrypt.BCrypt;
+
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 public class T02Prac {
 
