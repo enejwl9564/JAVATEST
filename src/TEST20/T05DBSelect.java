@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class T01DBconn {
+public class T05DBSelect {
 
 	public static void main(String[] args) {
 		//연결관련 정보 저장용 변수
@@ -24,6 +24,18 @@ public class T01DBconn {
 			System.out.println("Driver Loading Success!!");
 			conn = DriverManager.getConnection(url,id,pw);	//DB Connection 객체 받기
 			System.out.println("DB Connected...");
+			
+			pstmt = conn.prepareStatement("select * from testdb.tbl_meme;");
+			
+			rs = pstmt.executeQuery();
+			if(rs != null) {
+				while(rs.next()) {
+					System.out.println(rs.getString("분류")+" ");
+					System.out.println(rs.getString("상호")+" ");
+					System.out.println(rs.getString("도로명주소")+" ");
+				}
+			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {

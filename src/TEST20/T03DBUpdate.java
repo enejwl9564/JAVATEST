@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class T01DBconn {
+public class T03DBUpdate {
 
 	public static void main(String[] args) {
 		//연결관련 정보 저장용 변수
@@ -24,9 +24,21 @@ public class T01DBconn {
 			System.out.println("Driver Loading Success!!");
 			conn = DriverManager.getConnection(url,id,pw);	//DB Connection 객체 받기
 			System.out.println("DB Connected...");
+			pstmt = conn.prepareStatement("update tbl_customer set addr = ? where id = ?");
+			pstmt.setString(1, "마산");
+			pstmt.setInt(2, 3);
+			
+			int result = pstmt.executeUpdate();
+			if(result != 0) {
+				System.out.println("UPDATE 성공");
+			}else {
+				System.out.println("UPDATE 실패");
+			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
+			try {pstmt.close();}catch(Exception e) {e.printStackTrace();}
 			try {conn.close();}catch(Exception e) {e.printStackTrace();}
 		}
 	}
