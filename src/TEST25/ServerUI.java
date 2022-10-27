@@ -4,6 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.DataOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,7 +22,11 @@ class SGUI extends JFrame implements ActionListener,KeyListener
 	JScrollPane scroll;
 	JTextField txt1;
 	
-	SGUI(){
+	//소켓코드 추가
+	ServerSocket server;
+	Socket client;
+	
+	SGUI() throws Exception{
 		super("Chat Server");	//프레임창 제목
 		
 		JPanel pannel = new JPanel(); //패널 생성
@@ -46,6 +53,20 @@ class SGUI extends JFrame implements ActionListener,KeyListener
 		setBounds(100,100,300,340);	//프레임창 위치
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //종료버튼 사용가능상태
 		setVisible(true);	//프레임창 보여주기
+		
+		//소켓 코드 추가
+		//1.
+		server = new ServerSocket(5555);
+		//2.
+		client = server.accept();
+		//3. 스레드 만들기 ( 수신용 : recv )
+		ServerRecvThread recv = new ServerRecvThread(client, this);
+		Thread th1 = new Thread(recv);
+		//4. 스레드 실행하기 ( 수신 : recv )
+		th1.start();
+		//처음접속메시지 띄우기
+		area.append(client.getInetAddress()+" 에서 접속\n");
+		
 	}
 
 	@Override
@@ -71,6 +92,16 @@ class SGUI extends JFrame implements ActionListener,KeyListener
 			//2 필드의 내용 삭제
 			txt1.setText("");
 			
+			//Send 작업
+			try {
+				DataOutputStream Dout = new DataOutputStream(client.getOutputStream());
+				Dout.writeUTF(txt1.getText());
+				Dout.flush();
+				
+			}catch(Exception e1) {
+				e1.printStackTrace();
+			}
+			
 		}
 	}
 	//키를 뗏을때(UNICODE 미지원)
@@ -85,7 +116,7 @@ class SGUI extends JFrame implements ActionListener,KeyListener
 
 public class ServerUI {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		new SGUI();
 	}
 

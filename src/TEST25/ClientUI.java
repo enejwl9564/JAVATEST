@@ -4,8 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,16 +22,15 @@ class CGUI extends JFrame implements ActionListener,KeyListener
 	JScrollPane scroll;
 	JTextField txt1;
 	
-	CGUI(){
+	Socket client;
+	
+	CGUI() throws Exception {
 		super("Chat Server");	//프레임창 제목
-		
 		JPanel pannel = new JPanel(); //패널 생성
-		
 		pannel.setLayout(null);	//Layout 설정 x
 		
-		
-		
 		area = new JTextArea();	//텍스트영역창
+		area.setEditable(false);
 		//area.setBounds(10,10,260,240);	//스크롤 추가시 생략
 		
 		scroll = new JScrollPane(area); //area에 스크롤 추가하기
@@ -38,6 +40,7 @@ class CGUI extends JFrame implements ActionListener,KeyListener
 		txt1.setBounds(10,260,260,30);		//크기
 		txt1.addKeyListener(this);			//이벤트 추가(키보드)
 		
+		
 		pannel.add(txt1);
 		pannel.add(scroll);
 		
@@ -46,6 +49,17 @@ class CGUI extends JFrame implements ActionListener,KeyListener
 		setBounds(100,100,300,340);	//프레임창 위치
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //종료버튼 사용가능상태
 		setVisible(true);	//프레임창 보여주기
+		
+		//소켓 코드 추가
+		//1.서버로 연결요청
+		client = new Socket("192.168.3.254",8888);
+		//2.수신 스레드 객체 생성
+		ClientRecvThread recv = new ClientRecvThread(client,this);
+		Thread th1 = new Thread(recv);
+		//3.수신 스레드 실행
+		th1.start();
+		
+		
 	}
 
 	@Override
@@ -66,13 +80,21 @@ class CGUI extends JFrame implements ActionListener,KeyListener
 		//System.out.println("KEYPRESSED함수 : "+e.getKeyCode());
 		if(e.getKeyCode()==10) //엔터키 입력
 		{
+			//Send 작업
+			try {
+				DataOutputStream Dout = new DataOutputStream(client.getOutputStream());
+				Dout.writeUTF(txt1.getText());
+				Dout.flush();
+				
+			}catch(Exception e1) {
+				e1.printStackTrace();
+			}
 			//1 필드의 내용 ->Area
 			area.append("[Server] : "+txt1.getText()+"\n");
 			//2 필드의 내용 삭제
 			txt1.setText("");
-			
-		}
 	}
+}
 	//키를 뗏을때(UNICODE 미지원)
 	@Override
 	public void keyReleased(KeyEvent e) {
@@ -85,7 +107,7 @@ class CGUI extends JFrame implements ActionListener,KeyListener
 
 public class ClientUI {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 		new CGUI();
 	}
 
