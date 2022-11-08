@@ -1,5 +1,6 @@
-package T_Domain;
+package T_Tests;
 
+import T_Domain.BookDTO;
 import T_Service.BookService;
 
 public class UnitTest {
