@@ -5,7 +5,16 @@ import T_Domain.BookDTO;
 
 public class BookService {
 	
-	BookDAO dao = BookDAO.getInstance();
+	private BookDAO dao = BookDAO.getInstance();
+	
+	//싱글톤 패턴 코드 추가
+	private BookService instance;
+	public BookService getInstance() {
+		if(instance == null)
+			instance = new BookService();
+		return instance;
+	}
+	public BookService() {}
 	
 	//도서 조회하기
 	//도서 등록하기
@@ -13,10 +22,14 @@ public class BookService {
 	public boolean RegisterBook(BookDTO dto, int permission) {
 		
 		boolean isRegisterOK = true;
-		//권한 체크(등록가능한지여부)
 		
+		//권한 체크(등록가능한지여부)
 		if(permission >= 3) {
-			return dao.Insert(dto);
+			
+			int result = dao.Insert(dto);
+			if(result > 0) {
+				return true;
+			}
 		}
 		
 		return false;

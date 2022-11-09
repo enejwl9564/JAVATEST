@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class BookDAO {
+public class MemberDAO {
 	// 연결관련 정보 저장용 변수
 		String id = "root"; // DB연결 id
 		String pw = "1234"; // DB연결 pw
@@ -17,14 +17,14 @@ public class BookDAO {
 		ResultSet rs = null; // 쿼리결과(Select결과)수신용 참조변수
 
 		//싱글톤 패턴 코드 추가
-		private static BookDAO instance;
-		public static BookDAO getInstance() {
+		private static MemberDAO instance;
+		public static MemberDAO getInstance() {
 			if(instance==null);
-				instance = new BookDAO();
+				instance = new MemberDAO();
 			return instance;
 		}
 		
-		private BookDAO() {
+		private MemberDAO() {
 			// CONN객체 연결
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
@@ -38,15 +38,14 @@ public class BookDAO {
 		//전체 조회
 		//선택 조회
 		//등록 하기
-		public int Insert(BookDTO dto) {
+		public int Insert(MemberDTO dto) {
 			int result = 0;
 			//pstmt
 			try {
-				pstmt = conn.prepareStatement("insert into tbl_book values(?,?,1)");
-				pstmt.setInt(1, dto.getBookCode());
-				pstmt.setString(2, dto.getBookName());
+				pstmt = conn.prepareStatement("insert into tbl_member values(?,?)");
+				pstmt.setString(1, dto.getMemId());
+				pstmt.setString(2, dto.getPwd());
 				result = pstmt.executeUpdate();
-				
 			} catch (Exception e) {
 				
 				e.printStackTrace();
