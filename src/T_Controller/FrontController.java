@@ -18,13 +18,14 @@ public class FrontController {
 	private void init() {
 		map.put("/Member", new MemberController());
 		map.put("/Book", new BookController());
+		map.put("/Auth", new AuthController());
 	}
 	
 	//사용자로부터 요청서비스명, 서비스번호(SN)를 받아 요청처리 Controller를 실행
 	public Object ExSubController(String menu,int SN,DTO dto) {
 		
 		//서비스 선별
-		SubController sub = map.get(menu);	//업캐스팅
+		SubController sub = map.get(menu);	//맵에서 서비스에 맞는걸 꺼낸다
 		//SN 전달 excute
 		Object obj = sub.excute(SN,dto); // 1,2,3,4,etc..
 		
